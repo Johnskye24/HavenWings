@@ -1,0 +1,947 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>HavenWings Farms</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{--orange:#FF6B35;--yellow:#FFD166;--green:#2D6A4F;--lg:#52B788;--cream:#FFFBF2;--dark:#1A1A1A;}
+html{scroll-behavior:smooth;}
+body{font-family:'Segoe UI',sans-serif;color:var(--dark);background:var(--cream);}
+
+nav{position:fixed;top:0;width:100%;background:rgba(26,26,26,.96);backdrop-filter:blur(10px);z-index:998;padding:0 5%;}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;height:66px;}
+.logo{font-size:1.3rem;font-weight:900;color:var(--yellow);text-decoration:none;}
+.logo span{color:var(--orange);}
+.nav-links{display:flex;gap:26px;list-style:none;}
+.nav-links a{color:#ddd;text-decoration:none;font-size:.88rem;font-weight:500;transition:.2s;padding:4px 0;border-bottom:2px solid transparent;}
+.nav-links a.active,.nav-links a:hover{color:var(--yellow);border-bottom-color:var(--yellow);}
+.nav-cta{background:var(--orange);color:#fff;padding:9px 22px;border-radius:25px;text-decoration:none;font-weight:700;font-size:.88rem;transition:.2s;}
+.nav-cta:hover{background:var(--yellow);color:var(--dark);}
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;background:none;border:none;}
+.hamburger span{width:24px;height:2.5px;background:#fff;border-radius:2px;display:block;transition:.3s;}
+.hamburger.open span:nth-child(1){transform:rotate(45deg) translate(5px,5px);}
+.hamburger.open span:nth-child(2){opacity:0;}
+.hamburger.open span:nth-child(3){transform:rotate(-45deg) translate(5px,-5px);}
+
+.hero{min-height:100vh;background:linear-gradient(135deg,#1a1a1a 0%,#2D6A4F 55%,#FF6B35 100%);display:flex;align-items:center;padding:80px 5% 40px;position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Ccircle cx='30' cy='30' r='20'/%3E%3C/g%3E%3C/svg%3E");}
+.hero-content{max-width:650px;z-index:1;}
+.hero-badge{display:inline-block;background:var(--yellow);color:var(--dark);padding:6px 16px;border-radius:20px;font-size:.78rem;font-weight:700;letter-spacing:1px;margin-bottom:20px;text-transform:uppercase;}
+.hero h1{font-size:clamp(2.2rem,5vw,3.8rem);font-weight:900;color:#fff;line-height:1.15;margin-bottom:18px;}
+.hero h1 span{color:var(--yellow);}
+.hero p{color:rgba(255,255,255,.85);font-size:1.05rem;line-height:1.75;margin-bottom:32px;max-width:500px;}
+.hero-btns{display:flex;gap:14px;flex-wrap:wrap;}
+.btn-primary{background:var(--orange);color:#fff;padding:14px 30px;border-radius:30px;text-decoration:none;font-weight:700;font-size:.95rem;transition:.25s;box-shadow:0 4px 20px rgba(255,107,53,.4);}
+.btn-primary:hover{transform:translateY(-3px);}
+.btn-secondary{background:transparent;color:#fff;padding:14px 30px;border-radius:30px;text-decoration:none;font-weight:700;font-size:.95rem;border:2px solid rgba(255,255,255,.45);transition:.25s;}
+.btn-secondary:hover{background:rgba(255,255,255,.12);}
+.hero-stats{display:flex;gap:40px;margin-top:44px;flex-wrap:wrap;}
+.stat-num{font-size:2rem;font-weight:900;color:var(--yellow);}
+.stat-label{font-size:.78rem;color:rgba(255,255,255,.7);text-transform:uppercase;letter-spacing:1px;}
+.hero-emojis{position:absolute;right:6%;top:50%;transform:translateY(-50%);font-size:7rem;opacity:.12;line-height:1.3;display:flex;flex-direction:column;gap:10px;}
+
+section{padding:88px 5%;}
+.section-tag{display:inline-block;background:var(--yellow);color:var(--dark);padding:4px 14px;border-radius:20px;font-size:.76rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:12px;}
+.section-title{font-size:clamp(1.7rem,3.5vw,2.5rem);font-weight:900;margin-bottom:12px;line-height:1.2;}
+.section-title span{color:var(--orange);}
+.section-sub{color:#666;font-size:.97rem;line-height:1.75;max-width:560px;}
+.section-head{margin-bottom:52px;}
+
+.about{background:#fff;}
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;}
+.about-img{background:linear-gradient(135deg,var(--green),var(--lg));border-radius:20px;height:380px;display:flex;align-items:center;justify-content:center;font-size:8rem;position:relative;overflow:hidden;}
+.about-text p{color:#555;line-height:1.8;margin-bottom:14px;font-size:.95rem;}
+.about-pills{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px;}
+.pill{background:var(--cream);border:2px solid var(--yellow);padding:6px 16px;border-radius:20px;font-size:.82rem;font-weight:600;transition:.2s;}
+.pill:hover{background:var(--yellow);}
+
+.products{background:var(--cream);}
+.products-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:28px;}
+.product-card{background:#fff;border-radius:20px;padding:30px 24px;text-align:center;box-shadow:0 4px 18px rgba(0,0,0,.06);transition:.3s;border:2px solid transparent;}
+.product-card:hover{transform:translateY(-5px);box-shadow:0 14px 40px rgba(0,0,0,.1);border-color:var(--orange);}
+.product-icon{font-size:3.2rem;margin-bottom:14px;}
+.product-card h3{font-size:1.2rem;font-weight:800;margin-bottom:8px;}
+.product-card p{color:#777;font-size:.87rem;line-height:1.6;margin-bottom:14px;}
+.product-badge{display:inline-block;background:var(--green);color:#fff;padding:4px 14px;border-radius:20px;font-size:.78rem;font-weight:700;}
+.product-price{font-size:1.35rem;font-weight:900;color:var(--orange);margin:10px 0 4px;}
+.product-note{font-size:.78rem;color:#999;margin-bottom:14px;}
+.quick-order-btn{width:100%;background:var(--orange);color:#fff;border:none;padding:11px;border-radius:10px;font-weight:700;font-size:.9rem;cursor:pointer;transition:.25s;}
+.quick-order-btn:hover{background:var(--green);}
+
+.why{background:linear-gradient(135deg,var(--dark),var(--green));color:#fff;}
+.why .section-title{color:#fff;}
+.why .section-sub{color:rgba(255,255,255,.75);}
+.why-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:24px;}
+.why-card{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:16px;padding:26px 20px;transition:.3s;}
+.why-card:hover{background:rgba(255,255,255,.15);transform:translateY(-4px);}
+.why-icon{font-size:2.4rem;margin-bottom:12px;}
+.why-card h3{font-size:1rem;font-weight:800;margin-bottom:8px;color:var(--yellow);}
+.why-card p{font-size:.86rem;color:rgba(255,255,255,.75);line-height:1.7;}
+
+.facts{background:#fff;}
+.facts-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:26px;}
+.fact-card{border-radius:16px;padding:26px;transition:.3s;}
+.fact-card:hover{transform:scale(1.02);}
+.fact-card:nth-child(1){background:linear-gradient(135deg,#FFD166,#FFB347);}
+.fact-card:nth-child(2){background:linear-gradient(135deg,#52B788,#2D6A4F);color:#fff;}
+.fact-card:nth-child(3){background:linear-gradient(135deg,#FF6B35,#E63946);color:#fff;}
+.fact-card:nth-child(4){background:linear-gradient(135deg,#457B9D,#1D3557);color:#fff;}
+.fact-card:nth-child(5){background:linear-gradient(135deg,#A8DADC,#457B9D);}
+.fact-card:nth-child(6){background:linear-gradient(135deg,#F1FAEE,#A8DADC);}
+.fact-card h3{font-size:.95rem;font-weight:800;margin-bottom:10px;}
+.fact-card p{font-size:.86rem;line-height:1.7;opacity:.9;}
+.fact-emoji{font-size:2rem;margin-bottom:10px;}
+
+.faq{background:var(--cream);}
+.faq-list{display:flex;flex-direction:column;gap:14px;max-width:800px;}
+.faq-item{background:#fff;border-radius:14px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,.06);border:2px solid transparent;transition:.3s;}
+.faq-item.open{border-color:var(--orange);}
+.faq-q{padding:20px 24px;font-weight:700;font-size:.95rem;cursor:pointer;display:flex;justify-content:space-between;align-items:center;user-select:none;}
+.faq-q:hover{color:var(--orange);}
+.faq-icon{font-size:1.2rem;transition:.3s;color:var(--orange);}
+.faq-item.open .faq-icon{transform:rotate(45deg);}
+.faq-a{max-height:0;overflow:hidden;transition:max-height .4s ease,padding .3s;}
+.faq-item.open .faq-a{max-height:220px;padding:0 24px 20px;}
+.faq-a p{color:#666;font-size:.9rem;line-height:1.75;}
+
+/* REVIEWS SECTION */
+.reviews-section{background:var(--cream);}
+.reviews-layout{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:start;}
+.review-form-box{background:#fff;border-radius:20px;padding:28px;box-shadow:0 4px 18px rgba(0,0,0,.07);}
+.review-form-box h3{font-size:1.1rem;font-weight:800;margin-bottom:18px;color:var(--dark);}
+.star-selector{display:flex;gap:6px;margin-bottom:16px;flex-direction:row-reverse;justify-content:flex-end;}
+.star-selector input{display:none;}
+.star-selector label{font-size:2rem;cursor:pointer;color:#ddd;transition:.2s;}
+.star-selector input:checked ~ label,
+.star-selector label:hover,
+.star-selector label:hover ~ label{color:var(--yellow);}
+.review-input{width:100%;border:2px solid #eee;border-radius:10px;padding:11px 14px;font-size:.9rem;font-family:inherit;outline:none;resize:vertical;height:90px;transition:.2s;}
+.review-input:focus{border-color:var(--orange);}
+.review-name-input{width:100%;border:2px solid #eee;border-radius:10px;padding:11px 14px;font-size:.9rem;font-family:inherit;outline:none;margin-bottom:12px;transition:.2s;}
+.review-name-input:focus{border-color:var(--orange);}
+.submit-review-btn{width:100%;background:var(--orange);color:#fff;border:none;padding:12px;border-radius:10px;font-weight:700;font-size:.95rem;cursor:pointer;transition:.25s;margin-top:12px;}
+.submit-review-btn:hover{background:var(--green);}
+
+.reviews-feed{display:flex;flex-direction:column;gap:14px;max-height:520px;overflow-y:auto;padding-right:4px;}
+.reviews-feed::-webkit-scrollbar{width:4px;}
+.reviews-feed::-webkit-scrollbar-thumb{background:var(--orange);border-radius:4px;}
+.review-card{background:#fff;border-radius:16px;padding:20px;box-shadow:0 2px 12px rgba(0,0,0,.06);border-left:4px solid var(--orange);animation:fadeUp .4s ease;}
+.review-card .r-stars{color:var(--yellow);font-size:1rem;margin-bottom:6px;}
+.review-card .r-text{color:#555;font-size:.88rem;line-height:1.7;margin-bottom:10px;font-style:italic;}
+.review-card .r-author{font-weight:800;font-size:.85rem;}
+.review-card .r-date{font-size:.75rem;color:#aaa;margin-top:2px;}
+
+/* CONTACT */
+.contact{background:linear-gradient(135deg,var(--orange),#E63946);}
+.contact-inner{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:start;}
+.contact .section-title{color:#fff;}
+.contact .section-sub{color:rgba(255,255,255,.85);}
+.contact-info{display:flex;flex-direction:column;gap:18px;margin-top:26px;}
+.contact-item{display:flex;align-items:center;gap:14px;color:#fff;}
+.ci-icon{background:rgba(255,255,255,.2);width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0;}
+.contact-item p,.contact-item a{font-size:.9rem;opacity:.9;color:#fff;text-decoration:none;}
+
+.order-form-box{background:#fff;border-radius:20px;padding:28px;}
+.order-form-box h3{font-size:1.15rem;font-weight:800;margin-bottom:20px;color:var(--dark);}
+.fg{margin-bottom:14px;}
+.fg label{display:block;font-size:.82rem;font-weight:700;color:var(--dark);margin-bottom:5px;}
+.fg input,.fg textarea{width:100%;padding:11px 14px;border:2px solid #eee;border-radius:10px;font-size:.9rem;font-family:inherit;outline:none;transition:.2s;}
+.fg input:focus,.fg textarea:focus{border-color:var(--orange);}
+.fg textarea{height:80px;resize:vertical;}
+.prod-section-label{font-size:.82rem;font-weight:700;color:var(--dark);margin-bottom:8px;display:block;}
+.prod-items{display:flex;flex-direction:column;gap:8px;margin-bottom:14px;}
+.prod-item{display:flex;align-items:center;justify-content:space-between;background:#f9f9f9;border:2px solid #eee;border-radius:12px;padding:11px 14px;transition:.25s;gap:10px;flex-wrap:wrap;}
+.prod-item.active{border-color:var(--orange);background:#fff8f5;}
+.prod-item-left{display:flex;align-items:center;gap:10px;flex:1;min-width:160px;}
+.prod-item-left input[type=checkbox]{width:18px;height:18px;accent-color:var(--orange);cursor:pointer;flex-shrink:0;}
+.prod-item-name{font-size:.88rem;font-weight:700;color:var(--dark);}
+.prod-item-price{font-size:.78rem;font-weight:600;color:var(--orange);}
+.qty-box-wrap{display:flex;align-items:center;gap:6px;opacity:.3;pointer-events:none;transition:.2s;}
+.qty-box-wrap.on{opacity:1;pointer-events:all;}
+.qty-box-wrap label{font-size:.75rem;color:#888;font-weight:600;white-space:nowrap;}
+.qty-box{width:70px;padding:7px 10px;border:2px solid #ddd;border-radius:8px;font-size:1rem;font-weight:700;text-align:center;outline:none;transition:.2s;color:var(--dark);}
+.qty-box:focus{border-color:var(--orange);}
+
+/* DELIVERY OPTIONS */
+.delivery-section{margin-bottom:14px;}
+.delivery-section-label{font-size:.82rem;font-weight:700;color:var(--dark);margin-bottom:8px;display:block;}
+.delivery-options{display:flex;flex-direction:column;gap:8px;}
+.delivery-opt{display:flex;align-items:flex-start;gap:10px;background:#f9f9f9;border:2px solid #eee;border-radius:12px;padding:11px 14px;cursor:not-allowed;transition:.25s;opacity:.5;filter:grayscale(30%);}
+.delivery-opt.unlocked{cursor:pointer;opacity:1;filter:none;}
+.delivery-opt.unlocked:hover{border-color:var(--orange);background:#fff8f5;}
+.delivery-opt.selected{border-color:var(--orange);background:#fff8f5;}
+.delivery-opt input[type=radio]{width:17px;height:17px;accent-color:var(--orange);cursor:pointer;margin-top:2px;flex-shrink:0;pointer-events:none;}
+.delivery-opt-info{display:flex;flex-direction:column;}
+.delivery-opt-name{font-size:.88rem;font-weight:700;color:var(--dark);}
+.delivery-opt-desc{font-size:.76rem;color:#888;margin-top:2px;}
+.delivery-locked-hint{font-size:.76rem;color:#bbb;font-style:italic;margin-top:6px;}
+.delivery-note{background:linear-gradient(135deg,#fff8e7,#fff3cd);border:1px solid var(--yellow);border-radius:10px;padding:10px 14px;font-size:.8rem;color:#8a6000;font-weight:600;margin-top:8px;}
+
+.order-total-bar{background:linear-gradient(135deg,var(--green),var(--lg));border-radius:12px;padding:13px 18px;display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;}
+.order-total-label{color:#fff;font-size:.88rem;font-weight:600;}
+.order-total-amt{color:var(--yellow);font-size:1.4rem;font-weight:900;}
+
+.submit-btn{width:100%;background:var(--orange);color:#fff;border:none;padding:13px;border-radius:10px;font-size:.97rem;font-weight:700;cursor:pointer;transition:.25s;}
+.submit-btn:hover{background:var(--green);}
+.wa-btn{display:flex;align-items:center;justify-content:center;gap:10px;margin-top:10px;background:#25D366;color:#fff;padding:12px;border-radius:10px;font-weight:700;font-size:.95rem;text-decoration:none;transition:.25s;}
+.wa-btn:hover{background:#1ebe5d;}
+
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:9990;align-items:center;justify-content:center;padding:20px;}
+.modal-overlay.open{display:flex;}
+.modal-box{background:#fff;border-radius:20px;padding:36px;max-width:460px;width:100%;position:relative;animation:popIn .3s ease;text-align:center;}
+.modal-close{position:absolute;top:16px;right:18px;background:none;border:none;font-size:1.5rem;cursor:pointer;color:#999;}
+.modal-close:hover{color:var(--orange);}
+
+.float-wa{position:fixed;bottom:30px;right:28px;background:#25D366;color:#fff;width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(37,211,102,.5);z-index:997;text-decoration:none;transition:.3s;animation:pulse 2s infinite;}
+.float-wa:hover{transform:scale(1.1);}
+.scroll-top{position:fixed;bottom:30px;left:28px;background:var(--orange);color:#fff;width:46px;height:46px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.1rem;cursor:pointer;box-shadow:0 4px 16px rgba(255,107,53,.4);transition:.3s;opacity:0;pointer-events:none;border:none;z-index:997;}
+.scroll-top.visible{opacity:1;pointer-events:all;}
+.scroll-top:hover{transform:translateY(-3px);}
+
+footer{background:var(--dark);color:rgba(255,255,255,.65);padding:50px 5% 26px;}
+.footer-inner{display:grid;grid-template-columns:2fr 1fr 1fr;gap:40px;margin-bottom:38px;}
+.footer-brand .logo{font-size:1.3rem;margin-bottom:12px;display:block;}
+.footer-brand p{font-size:.86rem;line-height:1.7;}
+.footer-col h4{color:#fff;font-size:.92rem;font-weight:800;margin-bottom:14px;}
+.footer-col ul{list-style:none;display:flex;flex-direction:column;gap:9px;}
+.footer-col ul li a{color:rgba(255,255,255,.6);text-decoration:none;font-size:.86rem;transition:.2s;}
+.footer-col ul li a:hover{color:var(--yellow);}
+.footer-bottom{border-top:1px solid rgba(255,255,255,.1);padding-top:20px;text-align:center;font-size:.81rem;}
+
+.toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--green);color:#fff;padding:14px 28px;border-radius:12px;font-weight:700;font-size:.9rem;z-index:9999;opacity:0;transition:.4s;min-width:280px;text-align:center;}
+.toast.show{transform:translateX(-50%) translateY(0);opacity:1;}
+.toast.error{background:#E63946;}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+@keyframes popIn{from{opacity:0;transform:scale(.9);}to{opacity:1;transform:scale(1);}}
+@keyframes pulse{0%,100%{box-shadow:0 4px 20px rgba(37,211,102,.5);}50%{box-shadow:0 4px 32px rgba(37,211,102,.8);}}
+.reveal{opacity:0;transform:translateY(30px);transition:opacity .55s ease,transform .55s ease;}
+.reveal.visible{opacity:1;transform:translateY(0);}
+
+@media(max-width:768px){
+  .nav-links{display:none;flex-direction:column;position:absolute;top:66px;left:0;width:100%;background:#1a1a1a;padding:18px 5%;gap:16px;}
+  .nav-links.open{display:flex;}
+  .hamburger{display:flex;}
+  .hero-emojis{display:none;}
+  .about-grid,.contact-inner,.footer-inner,.reviews-layout{grid-template-columns:1fr;}
+  .hero-stats{gap:22px;}
+}
+</style>
+</head>
+<body>
+
+<a class="float-wa" href="https://wa.me/2348036170320" target="_blank">
+  <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="#fff"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+</a>
+
+<div class="modal-overlay" id="orderModal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="document.getElementById('orderModal').classList.remove('open')">✕</button>
+    <div style="font-size:3rem;margin-bottom:10px;">🎉</div>
+    <h3 style="margin-bottom:6px;">Order Ready!</h3>
+    <p style="color:#666;font-size:.87rem;line-height:1.6;margin-bottom:6px;" id="modalSummary"></p>
+    <p style="color:#555;font-size:.84rem;margin-bottom:20px;">WhatsApp will open with your full order typed. Just press <strong>Send!</strong></p>
+    <a id="waLink" href="#" target="_blank" onclick="document.getElementById('orderModal').classList.remove('open')"
+      style="display:flex;align-items:center;justify-content:center;gap:10px;background:#25D366;color:#fff;padding:15px;border-radius:12px;font-weight:800;font-size:1rem;text-decoration:none;margin-bottom:12px;">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="#fff"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      Send Order on WhatsApp →
+    </a>
+    <button onclick="document.getElementById('orderModal').classList.remove('open')" style="width:100%;background:#eee;border:none;padding:11px;border-radius:10px;font-weight:700;cursor:pointer;">Cancel</button>
+  </div>
+</div>
+
+<nav>
+  <div class="nav-inner">
+    <a href="#home" class="logo">HavenWings <span>Farms</span> 🥚</a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#about">About</a></li>
+      <li><a href="#products">Products</a></li>
+      <li><a href="#why">Why Us</a></li>
+      <li><a href="#facts">Facts</a></li>
+      <li><a href="#faq">FAQ</a></li>
+      <li><a href="#reviews">Reviews</a></li>
+    </ul>
+    <a href="#contact" class="nav-cta">Order Now</a>
+    <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<section class="hero" id="home">
+  <div class="hero-content">
+    <div class="hero-badge">🥚 Fresh Eggs. Every Day.</div>
+    <h1>Welcome to <span>HavenWings Farms</span></h1>
+    <p>Your number one source for premium, farm-fresh eggs from healthy, well-fed layer hens. Nutritious, natural, and delivered straight from our farm to your table.</p>
+    <div class="hero-btns">
+      <a href="#contact" class="btn-primary">🛒 Order Eggs Now</a>
+      <a href="#about" class="btn-secondary">Learn More</a>
+    </div>
+    <div class="hero-stats">
+      <div class="stat"><div class="stat-num" data-target="500">0</div><div class="stat-label">Happy Customers</div></div>
+      <div class="stat"><div class="stat-num" data-target="5000">0</div><div class="stat-label">Eggs Sold</div></div>
+      <div class="stat"><div class="stat-num" data-target="100">0</div><div class="stat-label">% Farm Fresh</div></div>
+    </div>
+  </div>
+  <div class="hero-emojis"><div>🥚</div><div>🐔</div><div>🌿</div></div>
+</section>
+
+<section class="about" id="about">
+  <div class="about-grid">
+    <div class="about-img reveal">🐔</div>
+    <div class="about-text">
+      <div class="section-tag">Our Story</div>
+      <h2 class="section-title">A Layer Farm Built on <span>Quality & Care</span></h2>
+      <p>At HavenWings Farms, we specialize in raising healthy layer hens that produce the freshest, most nutritious eggs. Every hen receives the highest standard of care — from feeding to housing to health management.</p>
+      <p>Our layers are fed a balanced, nutrient-rich diet free from harmful additives. They live in clean, spacious, well-ventilated housing and receive regular veterinary check-ups to keep them healthy and productive.</p>
+      <p>Located at 1000 Unit, Kuje, Abuja, we proudly supply households, restaurants, hotels, and markets with consistent, high-quality eggs you can trust every single day.</p>
+      <div class="about-pills">
+        <span class="pill">🌱 Naturally Fed</span>
+        <span class="pill">💉 Vaccinated Hens</span>
+        <span class="pill">🚗 Fast Delivery</span>
+        <span class="pill">✅ Vet Approved</span>
+        <span class="pill">🥚 Daily Collection</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="products" id="products">
+  <div class="section-head">
+    <div class="section-tag">What We Offer</div>
+    <h2 class="section-title">Our <span>Products</span></h2>
+    <p class="section-sub">Premium quality eggs in three sizes, plus organic poultry manure. Use the order form below to select sizes and quantities.</p>
+  </div>
+  <div class="products-grid">
+    <div class="product-card reveal">
+      <div class="product-icon">🥚</div>
+      <h3>Small / Pullet Eggs</h3>
+      <p>Fresh small-sized eggs collected daily. Perfect for everyday household use and small budgets.</p>
+      <div class="product-badge">Available Now</div>
+      <div class="product-price">₦4,800</div>
+      <div class="product-note">per crate</div>
+      <button class="quick-order-btn" id="qo-small">🛒 Order Now</button>
+    </div>
+    <div class="product-card reveal">
+      <div class="product-icon">🥚</div>
+      <h3>Medium Eggs</h3>
+      <p>Popular medium-sized eggs — great balance of size and value for families and small businesses.</p>
+      <div class="product-badge">Available Now</div>
+      <div class="product-price">₦5,200</div>
+      <div class="product-note">per crate</div>
+      <button class="quick-order-btn" id="qo-medium">🛒 Order Now</button>
+    </div>
+    <div class="product-card reveal">
+      <div class="product-icon">🥚</div>
+      <h3>Big Eggs</h3>
+      <p>Large premium eggs — best for restaurants, bakeries, and customers who love bigger, richer eggs.</p>
+      <div class="product-badge">Available Now</div>
+      <div class="product-price">₦6,200</div>
+      <div class="product-note">per crate</div>
+      <button class="quick-order-btn" id="qo-big">🛒 Order Now</button>
+    </div>
+    <div class="product-card reveal">
+      <div class="product-icon">🌾</div>
+      <h3>Organic Poultry Manure</h3>
+      <p>Premium organic fertilizer from our healthy hens. Rich in nutrients — perfect for crops and gardens.</p>
+      <div class="product-badge">Available Now</div>
+      <div class="product-price">₦6,000</div>
+      <div class="product-note">per bag</div>
+      <button class="quick-order-btn" id="qo-manure">🛒 Order Now</button>
+    </div>
+  </div>
+</section>
+
+<section class="why" id="why">
+  <div class="section-head">
+    <div class="section-tag">Why Choose Us</div>
+    <h2 class="section-title" style="color:#fff">The <span style="color:var(--yellow)">HavenWings</span> Difference</h2>
+    <p class="section-sub">We don't just sell eggs — we deliver trust, freshness, and quality every single time.</p>
+  </div>
+  <div class="why-grid">
+    <div class="why-card reveal"><div class="why-icon">🏥</div><h3>Vet-Supervised Farm</h3><p>Our hens are regularly examined and vaccinated by qualified veterinarians ensuring every egg is safe and healthy.</p></div>
+    <div class="why-card reveal"><div class="why-icon">🌿</div><h3>Natural Feed Only</h3><p>Our layers eat balanced, high-quality feed with no harmful additives — nutritious and delicious eggs every time.</p></div>
+    <div class="why-card reveal"><div class="why-icon">🚚</div><h3>Fast & Safe Delivery</h3><p>We deliver your eggs quickly and safely, ensuring they arrive fresh and intact at your location.</p></div>
+    <div class="why-card reveal"><div class="why-icon">💰</div><h3>Affordable Pricing</h3><p>Premium eggs at fair, competitive prices. We believe healthy food should be accessible to everyone.</p></div>
+    <div class="why-card reveal"><div class="why-icon">🔄</div><h3>Consistent Daily Supply</h3><p>Our hens lay every day — meaning you always have access to fresh eggs whenever you need them.</p></div>
+    <div class="why-card reveal"><div class="why-icon">🤝</div><h3>Trusted by Many</h3><p>Hundreds of households, restaurants, and businesses in Abuja rely on HavenWings Farms for fresh eggs daily.</p></div>
+  </div>
+</section>
+
+<section class="facts" id="facts">
+  <div class="section-head">
+    <div class="section-tag">Did You Know?</div>
+    <h2 class="section-title">Layer Poultry <span>Facts You Should Know</span></h2>
+    <p class="section-sub">Understanding layer farming helps you appreciate the quality in every egg you eat.</p>
+  </div>
+  <div class="facts-grid">
+    <div class="fact-card reveal"><div class="fact-emoji">🥚</div><h3>📅 Egg Production Rate</h3><p>A well-managed layer hen produces 250–300 eggs per year — nearly one egg every single day when properly fed and cared for.</p></div>
+    <div class="fact-card reveal"><div class="fact-emoji">💪</div><h3>🍳 Nutritional Powerhouse</h3><p>One egg contains 6–7g of high-quality protein, 13 essential vitamins and minerals — one of nature's most complete foods.</p></div>
+    <div class="fact-card reveal"><div class="fact-emoji">🌾</div><h3>🍽️ Feed & Egg Quality</h3><p>The hen's diet directly affects egg quality. Our hens eat layers mash rich in calcium, protein, and vitamins — giving you deep yellow yolks and strong shells.</p></div>
+    <div class="fact-card reveal"><div class="fact-emoji">💉</div><h3>🛡️ Vaccination is Key</h3><p>Layer hens must be vaccinated against Newcastle Disease, Gumboro, and Fowl Pox to ensure every egg is safe to eat.</p></div>
+    <div class="fact-card reveal"><div class="fact-emoji">🌡️</div><h3>🏠 Housing & Stress</h3><p>Proper housing with good ventilation and adequate space keeps hens stress-free. Stressed hens lay fewer eggs with thinner shells.</p></div>
+    <div class="fact-card reveal"><div class="fact-emoji">🥚</div><h3>📦 How to Store Eggs</h3><p>Store eggs in a cool, dry place or refrigerator. Properly stored eggs stay fresh up to 3–5 weeks. Never wash eggs before storage.</p></div>
+  </div>
+</section>
+
+<section class="faq" id="faq">
+  <div class="section-head">
+    <div class="section-tag">FAQ</div>
+    <h2 class="section-title">Frequently Asked <span>Questions</span></h2>
+    <p class="section-sub">Got questions about our eggs or farm? We've got answers.</p>
+  </div>
+  <div class="faq-list" id="faqList"></div>
+</section>
+
+<!-- CUSTOMER REVIEWS -->
+<section class="reviews-section" id="reviews">
+  <div class="section-head">
+    <div class="section-tag">Customer Reviews</div>
+    <h2 class="section-title">What Our <span>Customers Say</span></h2>
+    <p class="section-sub">Read reviews from our happy customers — and leave yours too!</p>
+  </div>
+  <div class="reviews-layout">
+    <!-- REVIEW FORM -->
+    <div class="review-form-box reveal">
+      <h3>⭐ Leave a Review</h3>
+      <p style="font-size:.83rem;color:#888;margin-bottom:14px;">We'd love to hear your experience with HavenWings Farms!</p>
+      <input class="review-name-input" type="text" id="reviewName" placeholder="Your name (e.g. Adaeze, Abuja)"/>
+      <div style="font-size:.82rem;font-weight:700;color:var(--dark);margin-bottom:6px;">Your Rating *</div>
+      <div class="star-selector" id="starSelector">
+        <input type="radio" name="rating" id="s5" value="5"/><label for="s5">★</label>
+        <input type="radio" name="rating" id="s4" value="4"/><label for="s4">★</label>
+        <input type="radio" name="rating" id="s3" value="3"/><label for="s3">★</label>
+        <input type="radio" name="rating" id="s2" value="2"/><label for="s2">★</label>
+        <input type="radio" name="rating" id="s1" value="1"/><label for="s1">★</label>
+      </div>
+      <div style="font-size:.82rem;font-weight:700;color:var(--dark);margin:12px 0 6px;">Your Review *</div>
+      <textarea class="review-input" id="reviewText" placeholder="Share your experience with our eggs or service..."></textarea>
+      <button class="submit-review-btn" id="submitReviewBtn">Submit Review</button>
+    </div>
+    <!-- REVIEWS FEED -->
+    <div class="reviews-feed" id="reviewsFeed"></div>
+  </div>
+</section>
+
+<section class="contact" id="contact">
+  <div class="contact-inner">
+    <div>
+      <div class="section-tag" style="background:rgba(255,255,255,.25);color:#fff;">Get In Touch</div>
+      <h2 class="section-title">Ready to <span style="color:var(--yellow)">Place an Order?</span></h2>
+      <p class="section-sub">Select your products, set quantities, choose delivery, and send your order directly to our WhatsApp.</p>
+      <div class="contact-info">
+        <div class="contact-item"><div class="ci-icon">📞</div><p>0803 617 0320</p></div>
+        <div class="contact-item"><div class="ci-icon">📍</div><p>1000 Unit, Kuje, Abuja, FCT, Nigeria</p></div>
+        <div class="contact-item"><div class="ci-icon">🕐</div><p>Mon – Sat: 7:00AM – 6:00PM</p></div>
+        <div class="contact-item"><div class="ci-icon">💬</div><a href="https://wa.me/2348036170320" target="_blank">Chat us on WhatsApp</a></div>
+      </div>
+    </div>
+
+    <div class="order-form-box">
+      <h3>🛒 Place Your Order</h3>
+      <div class="fg">
+        <label>Customer's Name *</label>
+        <input type="text" id="fname" placeholder="Enter your full name"/>
+      </div>
+      <div class="fg">
+        <label>Phone Number *</label>
+        <input type="tel" id="phone" placeholder="e.g. 0803 000 0000"/>
+      </div>
+
+      <span class="prod-section-label">Select Products & Quantities *</span>
+      <div class="prod-items" id="prodItems"></div>
+
+      <!-- DELIVERY OPTIONS -->
+      <div class="delivery-section">
+        <span class="delivery-section-label">Delivery Option *</span>
+        <div class="delivery-options" id="deliveryOptions">
+          <label class="delivery-opt" id="dopt-pickup" data-value="pickup">
+            <input type="radio" name="delivery" value="pickup"/>
+            <div class="delivery-opt-info">
+              <span class="delivery-opt-name">🏪 Pick Up Service</span>
+              <span class="delivery-opt-desc">Pick up your order at our farm — 1000 Unit, Kuje, Abuja</span>
+            </div>
+          </label>
+          <label class="delivery-opt" id="dopt-within" data-value="within">
+            <input type="radio" name="delivery" value="within"/>
+            <div class="delivery-opt-info">
+              <span class="delivery-opt-name">🚚 Delivery Within Kuje</span>
+              <span class="delivery-opt-desc">₦200 per crate delivery fee within Kuje area</span>
+            </div>
+          </label>
+          <label class="delivery-opt" id="dopt-outside" data-value="outside">
+            <input type="radio" name="delivery" value="outside"/>
+            <div class="delivery-opt-info">
+              <span class="delivery-opt-name">🚛 Delivery Outside Kuje</span>
+              <span class="delivery-opt-desc">₦300 per crate delivery fee outside Kuje</span>
+            </div>
+          </label>
+        </div>
+
+        </div>
+        <div class="delivery-note">📌 Note: Delivery is available from 50 crates and above</div>
+      </div>
+
+      <div class="order-total-bar">
+        <span class="order-total-label">Total Amount:</span>
+        <span class="order-total-amt" id="formTotal">₦0</span>
+      </div>
+
+      <div class="fg">
+        <label>Delivery Address</label>
+        <textarea id="deliveryAddr" placeholder="e.g. 12 Garki Street, Abuja..."></textarea>
+      </div>
+
+      <button class="submit-btn" id="submitBtn">🚀 Send Order Request</button>
+      <a href="https://wa.me/2348036170320" target="_blank" class="wa-btn">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="#fff"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        Chat on WhatsApp
+      </a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <a href="#home" class="logo">HavenWings <span>Farms</span> 🥚</a>
+      <p>Premium farm-fresh eggs and organic poultry manure from our layer farm in Kuje, Abuja. Healthy hens, fresh eggs, happy customers — every day.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Quick Links</h4>
+      <ul>
+        <li><a href="#about">About Us</a></li>
+        <li><a href="#products">Our Products</a></li>
+        <li><a href="#why">Why Choose Us</a></li>
+        <li><a href="#facts">Poultry Facts</a></li>
+        <li><a href="#reviews">Reviews</a></li>
+        <li><a href="#contact">Contact Us</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Our Products</h4>
+      <ul>
+        <li><a href="#products">Small/Pullet Eggs – ₦4,800</a></li>
+        <li><a href="#products">Medium Eggs – ₦5,200</a></li>
+        <li><a href="#products">Big Eggs – ₦6,200</a></li>
+        <li><a href="#products">Organic Manure – ₦6,000</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">© 2025 HavenWings Farms. All rights reserved. Fresh eggs from Kuje, Abuja. 🥚</div>
+</footer>
+
+<div class="toast" id="toast"></div>
+<button class="scroll-top" id="scrollTop">↑</button>
+
+<script>
+const PRODUCTS = [
+  {id:'small',  label:'Small / Pullet Eggs',    price:4800, unit:'crate'},
+  {id:'medium', label:'Medium Eggs',             price:5200, unit:'crate'},
+  {id:'big',    label:'Big Eggs',                price:6200, unit:'crate'},
+  {id:'manure', label:'Organic Poultry Manure',  price:6000, unit:'bag'},
+  {id:'layers', label:'Old Layers Chicken',      price:null, unit:'bird'},
+];
+
+const DELIVERY_OPTS = {
+  pickup:  {label:'Pick Up Service',          fee:0,   perCrate:false},
+  within:  {label:'Delivery Within Kuje',     fee:200, perCrate:true},
+  outside: {label:'Delivery Outside Kuje',    fee:300, perCrate:true},
+};
+
+const FAQS = [
+  {q:'What egg sizes do you sell?', a:'We sell three sizes: Small/Pullet (₦4,800/crate), Medium (₦5,200/crate), and Big (₦6,200/crate). You can order multiple sizes at once.'},
+  {q:'How fresh are your eggs?', a:'Our eggs are collected daily and delivered the same or next day — never more than 48 hours old when they reach you.'},
+  {q:'Do you deliver to my location?', a:'Yes! Delivery within Kuje is ₦200 per crate and outside Kuje is ₦300 per crate. Delivery is available from 50 crates and above. You can also pick up at the farm.'},
+  {q:'Can I order in bulk?', a:'Absolutely! We offer bulk discounts for large orders. Call us on 0803 617 0320 to discuss bulk pricing.'},
+  {q:'Do you sell poultry manure?', a:'Yes! Our organic poultry manure is available at ₦6,000 per bag — excellent for farms, gardens, and crop production.'},
+  {q:'What payment methods do you accept?', a:'We accept bank transfers, cash on delivery, and mobile payments. Payment details are provided upon order confirmation.'},
+];
+
+// Default reviews
+const SUPABASE_URL = 'https://jaapovmszsgdaiuvvknc.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImphYXBvdm1zenNnZGFpdXZ2a25jIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk4MTA0MTIsImV4cCI6MjA5NTM4NjQxMn0.Wo1vCFM3cvb1zBGEbs1a9FoUV9xLiGoJu7D78IUUIfk';
+
+const DEFAULT_REVIEWS = [
+  {name:'Adaeze Okonkwo, Abuja', rating:5, review:'The eggs are the freshest I\'ve ever had. The yolks are so rich and yellow — you can tell the hens are well fed!', created_at: new Date()},
+  {name:'Mr. Emeka Chukwu, Maitama Abuja', rating:5, review:'I use their eggs in my restaurant every day. Consistent quality, always on time, and the big-sized eggs are perfect!', created_at: new Date()},
+  {name:'Blessing Nwachukwu, Abuja', rating:5, review:'Their organic manure transformed my garden. My vegetables are growing twice as fast. Highly recommended!', created_at: new Date()},
+  {name:'Fatima Abdullahi, Abuja', rating:5, review:'I buy two crates every week without fail. Delivery is always fast and eggs are never more than a day old!', created_at: new Date()},
+];
+
+function renderReviewCards(data){
+  const feed = document.getElementById('reviewsFeed');
+  if(!data.length){
+    feed.innerHTML = `<div style="text-align:center;padding:30px;color:#aaa;font-size:.9rem;">No reviews yet. Be the first to leave one! 🌟</div>`;
+    return;
+  }
+  feed.innerHTML = data.map(r => `
+    <div class="review-card">
+      <div class="r-stars">${'★'.repeat(r.rating)}${'☆'.repeat(5-r.rating)}</div>
+      <div class="r-text">"${r.review}"</div>
+      <div class="r-author">${r.name}</div>
+      <div class="r-date">${new Date(r.created_at).toLocaleString('en-NG',{month:'long',year:'numeric'})}</div>
+    </div>`).join('');
+}
+
+async function fetchReviews(){
+  const feed = document.getElementById('reviewsFeed');
+  feed.innerHTML = `<div style="text-align:center;padding:30px;color:#aaa;font-size:.9rem;">⏳ Loading reviews...</div>`;
+  try{
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/reviews?select=*&order=created_at.desc`, {
+      headers:{
+        'apikey': SUPABASE_KEY,
+        'Authorization': `Bearer ${SUPABASE_KEY}`
+      }
+    });
+    if(!res.ok) throw new Error('fetch failed');
+    const data = await res.json();
+    renderReviewCards(data);
+  } catch(e){
+    // Preview environment blocks fetch — show default reviews as fallback
+    renderReviewCards(DEFAULT_REVIEWS);
+  }
+}
+
+async function submitReview(){
+  const name   = document.getElementById('reviewName').value.trim();
+  const text   = document.getElementById('reviewText').value.trim();
+  const rating = document.querySelector('input[name="rating"]:checked');
+  if(!name){ showToast('Please enter your name.','error'); return; }
+  if(!rating){ showToast('Please select a star rating.','error'); return; }
+  if(!text){ showToast('Please write your review.','error'); return; }
+
+  const btn = document.getElementById('submitReviewBtn');
+  btn.disabled = true;
+  btn.textContent = '⏳ Submitting...';
+
+  try{
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/reviews`, {
+      method: 'POST',
+      headers:{
+        'apikey': SUPABASE_KEY,
+        'Authorization': `Bearer ${SUPABASE_KEY}`,
+        'Content-Type': 'application/json',
+        'Prefer': 'return=minimal'
+      },
+      body: JSON.stringify({
+        name,
+        rating: parseInt(rating.value),
+        review: text
+      })
+    });
+    if(res.ok || res.status === 201){
+      showToast('Thank you for your review! 🎉');
+      document.getElementById('reviewName').value = '';
+      document.getElementById('reviewText').value = '';
+      document.querySelectorAll('input[name="rating"]').forEach(r => r.checked = false);
+      await fetchReviews();
+    } else {
+      showToast('Failed to submit. Please try again.','error');
+    }
+  } catch(e){
+    showToast('Network error. Please try again.','error');
+  }
+
+  btn.disabled = false;
+  btn.textContent = 'Submit Review';
+}
+
+// ── PRODUCT ROWS ──
+function buildProdItems(){
+  const c = document.getElementById('prodItems');
+  c.innerHTML = PRODUCTS.map(p => p.price === null ? `
+    <div class="prod-item na-item" id="prow-${p.id}" style="opacity:.5;cursor:not-allowed;background:#f5f5f5;">
+      <div class="prod-item-left" style="pointer-events:none;">
+        <div style="width:18px;height:18px;border:2px solid #ccc;border-radius:4px;flex-shrink:0;background:#eee;"></div>
+        <div>
+          <div class="prod-item-name" style="color:#aaa;">${p.label} <span style="background:#e0e0e0;color:#aaa;font-size:.7rem;padding:2px 8px;border-radius:10px;font-weight:700;margin-left:4px;">N/A</span></div>
+          <div style="font-size:.75rem;color:#ccc;">Currently unavailable</div>
+        </div>
+      </div>
+    </div>` : `
+    <div class="prod-item" id="prow-${p.id}">
+      <div class="prod-item-left">
+        <input type="checkbox" id="pchk-${p.id}"/>
+        <div>
+          <div class="prod-item-name">${p.label}</div>
+          <div class="prod-item-price">₦${p.price.toLocaleString()} / ${p.unit}</div>
+        </div>
+      </div>
+      <div class="qty-box-wrap" id="pqwrap-${p.id}">
+        <label for="pqty-${p.id}">Qty (${p.unit}s):</label>
+        <input class="qty-box" type="text" inputmode="numeric" pattern="[0-9]*" id="pqty-${p.id}"/>
+      </div>
+    </div>`).join('');
+
+  PRODUCTS.filter(p => p.price !== null).forEach(p => {
+    const chk = document.getElementById(`pchk-${p.id}`);
+    const wrap = document.getElementById(`pqwrap-${p.id}`);
+    const row  = document.getElementById(`prow-${p.id}`);
+    const qty  = document.getElementById(`pqty-${p.id}`);
+    if(!chk || !qty) return;
+    chk.addEventListener('change', () => {
+      row.classList.toggle('active', chk.checked);
+      wrap.classList.toggle('on', chk.checked);
+      if(chk.checked) qty.focus();
+      updateDeliveryLock();
+      updateTotal();
+    });
+    qty.addEventListener('input', () => {
+      qty.value = qty.value.replace(/[^0-9]/g,'');
+      updateTotal();
+    });
+  });
+
+  // Delivery option toggle & lock logic
+  let selectedDelivery = null;
+
+  function hasProductSelected(){
+    return PRODUCTS.filter(p => p.price !== null).some(p => {
+      const chk = document.getElementById(`pchk-${p.id}`);
+      return chk && chk.checked;
+    });
+  }
+
+  function updateDeliveryLock(){
+    const unlocked = hasProductSelected();
+    document.querySelectorAll('.delivery-opt').forEach(opt => {
+      opt.classList.toggle('unlocked', unlocked);
+    });
+
+  }
+
+  document.querySelectorAll('.delivery-opt').forEach(opt => {
+    opt.addEventListener('click', e => {
+      e.preventDefault();
+      if(!opt.classList.contains('unlocked')) return;
+      const val = opt.dataset.value;
+      if(selectedDelivery === val){
+        // Deselect
+        selectedDelivery = null;
+        opt.classList.remove('selected');
+        opt.querySelector('input[type=radio]').checked = false;
+      } else {
+        // Select new
+        selectedDelivery = val;
+        document.querySelectorAll('.delivery-opt').forEach(o => {
+          o.classList.remove('selected');
+          o.querySelector('input[type=radio]').checked = false;
+        });
+        opt.classList.add('selected');
+        opt.querySelector('input[type=radio]').checked = true;
+      }
+      updateTotal();
+    });
+  });
+}
+
+function getTotalCrates(){
+  let crates = 0;
+  PRODUCTS.filter(p => p.price !== null).forEach(p => {
+    if(p.unit !== 'crate') return;
+    const chk = document.getElementById(`pchk-${p.id}`);
+    const qty = document.getElementById(`pqty-${p.id}`);
+    if(!chk || !qty) return;
+    if(chk.checked) crates += parseInt(qty.value) || 0;
+  });
+  return crates;
+}
+
+function updateTotal(){
+  let subtotal = 0;
+  PRODUCTS.filter(p => p.price !== null).forEach(p => {
+    const chk = document.getElementById(`pchk-${p.id}`);
+    const qty = document.getElementById(`pqty-${p.id}`);
+    if(!chk || !qty) return;
+    if(chk.checked && p.price !== null) subtotal += p.price * (parseInt(qty.value) || 0);
+  });
+
+  const deliveryRadio = document.querySelector('input[name="delivery"]:checked');
+  let deliveryFee = 0;
+  if(deliveryRadio && deliveryRadio.value !== 'pickup'){
+    const opt = DELIVERY_OPTS[deliveryRadio.value];
+    const crates = getTotalCrates();
+    deliveryFee = opt.fee * crates;
+  }
+
+  const total = subtotal + deliveryFee;
+  document.getElementById('formTotal').textContent = total > 0 ? `₦${total.toLocaleString()}` : '₦0';
+}
+
+// ── SUBMIT ORDER ──
+function submitOrder(){
+  const fname = document.getElementById('fname').value.trim();
+  const phone = document.getElementById('phone').value.trim();
+  const addr  = document.getElementById('deliveryAddr').value.trim();
+  const deliveryRadio = document.querySelector('input[name="delivery"]:checked');
+
+  const lines = [];
+  let subtotal = 0;
+  PRODUCTS.filter(p => p.price !== null).forEach(p => {
+    const chk = document.getElementById(`pchk-${p.id}`);
+    const qty = document.getElementById(`pqty-${p.id}`);
+    if(!chk || !qty) return;
+    const q = parseInt(qty.value) || 0;
+    if(chk.checked && q > 0){
+      const sub = p.price * q;
+      subtotal += sub;
+      lines.push(`  • ${p.label}: ${q} ${p.unit}(s) x ₦${p.price.toLocaleString()} = ₦${sub.toLocaleString()}`);
+    } else if(chk.checked){
+      lines.push(`  • ${p.label}: quantity not specified`);
+    }
+  });
+
+  if(!fname){ showToast('Please enter your name.','error'); return; }
+  if(!phone){ showToast('Please enter your phone number.','error'); return; }
+  if(!lines.length){ showToast('Please select at least one product.','error'); return; }
+  if(!deliveryRadio){ showToast('Please select a delivery option.','error'); return; }
+
+  const dKey = deliveryRadio.value;
+  const dOpt = DELIVERY_OPTS[dKey];
+  const crates = getTotalCrates();
+  const deliveryFee = dOpt.perCrate ? dOpt.fee * crates : 0;
+  const total = subtotal + deliveryFee;
+
+  let deliveryLine = `Delivery Option: ${dOpt.label}`;
+  if(dOpt.perCrate && crates > 0) deliveryLine += `\nDelivery Fee: ${crates} crate(s) x ₦${dOpt.fee} = ₦${deliveryFee.toLocaleString()}`;
+
+  const msg =
+    `*NEW ORDER – HAVENWINGS FARMS*\n\n` +
+    `Customer's Name: ${fname}\n` +
+    `Phone: ${phone}\n\n` +
+    `Products Ordered:\n${lines.join('\n')}\n\n` +
+    `${deliveryLine}\n\n` +
+    `TOTAL (incl. delivery): ₦${total.toLocaleString()}\n\n` +
+    `Delivery Address: ${addr || 'Not provided'}\n\n` +
+    `Order placed on: ${new Date().toLocaleString('en-NG',{weekday:'long',year:'numeric',month:'long',day:'numeric',hour:'2-digit',minute:'2-digit'})}`;
+
+  document.getElementById('modalSummary').textContent = `${lines.length} product(s) — Total: ₦${total.toLocaleString()}`;
+  document.getElementById('waLink').href = `https://wa.me/2348036170320?text=${encodeURIComponent(msg)}`;
+  document.getElementById('orderModal').classList.add('open');
+
+  document.getElementById('fname').value = '';
+  document.getElementById('phone').value = '';
+  document.getElementById('deliveryAddr').value = '';
+  PRODUCTS.filter(p => p.price !== null).forEach(p => {
+    const chk  = document.getElementById(`pchk-${p.id}`);
+    const qty  = document.getElementById(`pqty-${p.id}`);
+    const row  = document.getElementById(`prow-${p.id}`);
+    const wrap = document.getElementById(`pqwrap-${p.id}`);
+    if(chk)  chk.checked = false;
+    if(qty)  qty.value = '';
+    if(row)  row.classList.remove('active');
+    if(wrap) wrap.classList.remove('on');
+  });
+  selectedDelivery = null;
+  document.querySelectorAll('.delivery-opt').forEach(o => {
+    o.classList.remove('selected');
+    o.querySelector('input[type=radio]').checked = false;
+  });
+  updateDeliveryLock();
+  updateTotal();
+}
+
+// ── FAQ ──
+function renderFaq(){
+  document.getElementById('faqList').innerHTML = FAQS.map((f,i) => `
+    <div class="faq-item" id="faq${i}">
+      <div class="faq-q" data-i="${i}">${f.q}<span class="faq-icon">+</span></div>
+      <div class="faq-a"><p>${f.a}</p></div>
+    </div>`).join('');
+  document.querySelectorAll('.faq-q').forEach(el => {
+    el.addEventListener('click', () => {
+      const i = el.dataset.i;
+      document.querySelectorAll('.faq-item').forEach((item,j) => {
+        j == i ? item.classList.toggle('open') : item.classList.remove('open');
+      });
+    });
+  });
+}
+
+// ── QUICK ORDER ──
+function setupQuickOrder(){
+  ['small','medium','big','manure'].forEach(id => {
+    document.getElementById(`qo-${id}`).addEventListener('click', () => {
+      document.getElementById('contact').scrollIntoView({behavior:'smooth'});
+      setTimeout(() => {
+        const chk = document.getElementById(`pchk-${id}`);
+        if(!chk.checked){ chk.checked = true; chk.dispatchEvent(new Event('change')); }
+        document.getElementById(`pqty-${id}`).focus();
+      }, 700);
+    });
+  });
+}
+
+// ── NAV ──
+function setupNav(){
+  const secs = ['home','about','products','why','facts','faq','reviews','contact'];
+  window.addEventListener('scroll', () => {
+    const pos = window.scrollY + 80;
+    secs.forEach(id => {
+      const el = document.getElementById(id);
+      const link = document.querySelector(`.nav-links a[href="#${id}"]`);
+      if(el && link){
+        pos >= el.offsetTop && pos < el.offsetTop + el.offsetHeight
+          ? link.classList.add('active') : link.classList.remove('active');
+      }
+    });
+    const st = document.getElementById('scrollTop');
+    window.scrollY > 400 ? st.classList.add('visible') : st.classList.remove('visible');
+  });
+}
+
+function observeReveal(){
+  const obs = new IntersectionObserver(e => e.forEach(x => { if(x.isIntersecting) x.target.classList.add('visible'); }),{threshold:.1});
+  document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+}
+
+function animateCounters(){
+  let done = false;
+  const obs = new IntersectionObserver(entries => {
+    if(entries[0].isIntersecting && !done){
+      done = true;
+      document.querySelectorAll('[data-target]').forEach(el => {
+        const target = +el.dataset.target;
+        let count = 0; const step = Math.ceil(target/80);
+        const t = setInterval(() => {
+          count = Math.min(count+step,target);
+          el.textContent = count.toLocaleString()+(target===100?'%':'+');
+          if(count>=target) clearInterval(t);
+        },20);
+      });
+      obs.disconnect();
+    }
+  },{threshold:.5});
+  const hs = document.querySelector('.hero-stats');
+  if(hs) obs.observe(hs);
+}
+
+function showToast(msg, type='success'){
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.className = 'toast '+(type==='error'?'error':'');
+  t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),4000);
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  buildProdItems();
+  renderFaq();
+  fetchReviews();
+  observeReveal();
+  setupNav();
+  setupQuickOrder();
+  animateCounters();
+  document.getElementById('submitBtn').addEventListener('click', submitOrder);
+  document.getElementById('submitReviewBtn').addEventListener('click', submitReview);
+  document.getElementById('hamburger').addEventListener('click', () => {
+    document.getElementById('navLinks').classList.toggle('open');
+    document.getElementById('hamburger').classList.toggle('open');
+  });
+  document.getElementById('orderModal').addEventListener('click', e => {
+    if(e.target===e.currentTarget) e.currentTarget.classList.remove('open');
+  });
+  document.getElementById('scrollTop').addEventListener('click', () => window.scrollTo({top:0,behavior:'smooth'}));
+});
+</script>
+</body>
+</html>
